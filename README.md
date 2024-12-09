@@ -18,11 +18,13 @@ pip3 install sigma-cli
 
 # Converting Crowdsec Rules
 
-_note: `sigma` outputs everything in one file._
+> By default, sigma appends everything into the same file. We want individual files with names that match the rule name.
 
 ```bash
-for i in `find /path/to/sigma_core/rules/windows/process_creation/ -type f` ; do echo ${i} ; sigma convert -p crowdsec -t crowdsec  ${i} > /path/to/$(basename ${i}) ; done
+for i in `find ./rules/windows/process_creation/ -type f` ; do echo ${i} ; sigma convert -p crowdsec -t crowdsec  ${i} > ./generated/$(basename ${i}) ; x=$(basename ${i%.*}); sed -i 's@name: sigmahq/.*@name: sigmahq/'${x}'@g' ./generated/$(basename ${i}) ;  done
 ```
+
+
 
 # Example output
 
