@@ -159,8 +159,7 @@ class CrowdsecBackend(TextQueryBackend):
         return self.not_token + self.token_separator + "("  + expr + ")"
 
     def generate_labels(self, rule: SigmaRule, spoofable: int, behavior: str, remediation: str) -> str:
-        """Use the rule tags and status to generate the meta section of the crowdsec scenario"""
-        
+        """Use the rule tags and status to generate the meta section of the crowdsec scenario"""    
         confidence = 0
         classification = ""
         if rule.status == SigmaStatus.EXPERIMENTAL:
