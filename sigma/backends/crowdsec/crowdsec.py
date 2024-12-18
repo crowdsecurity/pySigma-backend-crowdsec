@@ -221,7 +221,7 @@ labels:
             meta = self.generate_labels(rule, 0, "http:exploit", "true")
             #here scope is implicit : ip
         ### WINDOWS REGISTRY ADD
-        if rule.logsource.category == "registry_add" and rule.logsource.product == "windows":
+        elif rule.logsource.category == "registry_add" and rule.logsource.product == "windows":
             meta = self.generate_labels(rule, 0, "windows:audit", "false")
             prefilter = "(evt.Meta.service == 'sysmon' && evt.Parsed.EventID == '12')"
             blackhole = "blackhole: 2m"
@@ -230,7 +230,7 @@ labels:
   expression: evt.Parsed.ParentProcessId
 """
         ### WINDOWS PROCESS CREATION
-        if rule.logsource.category == "process_creation" and rule.logsource.product == "windows":
+        elif rule.logsource.category == "process_creation" and rule.logsource.product == "windows":
             meta = self.generate_labels(rule, 0, "windows:audit", "false")
             prefilter = "(evt.Meta.service == 'sysmon' && evt.Parsed.EventID == '1')"
             blackhole = "blackhole: 2m"
@@ -238,6 +238,19 @@ labels:
   type: ParentProcessId
   expression: evt.Parsed.ParentProcessId
 """
+        ### LINUX PROCESS CREATION
+        elif rule.logsource.service == "auditd" and rule.logsource.product == "linux":
+            meta = self.generate_labels(rule, 0, "linux:audit", "false")
+            prefilter = "(evt.Parsed.program == 'auditd')"
+            blackhole = "blackhole: 2m"
+            scope = """scope:
+  type: pid
+  expression: evt.Meta.ppid
+"""
+        else:
+            warnings.warn("Unknown rule type, aborting")
+            exit(1)
+        
         if rule.description:
             formatted_desc = rule.description.replace("\n", " ")
         else:
