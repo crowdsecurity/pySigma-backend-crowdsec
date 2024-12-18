@@ -45,14 +45,8 @@ def crowdsec_pipeline() -> ProcessingPipeline:        # Processing pipelines sho
                 identifier="crowdsec_windows_process_creation_fieldmapping",
                 rule_conditions=[LogsourceCondition(category="process_creation",product="windows",)],
                 transformation=FieldMappingTransformation({
-                    "Computer" : "evt.Parsed.Computer",                   
-                })
-            ),
-            ProcessingItem(     # This is an example for processing items generated from the mapping above.
-                identifier="crowdsec_windows_registry_add_fieldmapping",
-                rule_conditions=[LogsourceCondition(category="process_creation",product="windows",)],
-                transformation=FieldMappingTransformation({
                     #"EventID": "int(evt.Parsed.EventID)",
+                    "Computer" : "evt.Parsed.Computer",                   
                     "Company": "evt.Parsed.Company",
                     "OriginalFileName" : "evt.Parsed.OriginalFileName",
                     "UtcTime": "evt.StrTime",
@@ -92,15 +86,64 @@ def crowdsec_pipeline() -> ProcessingPipeline:        # Processing pipelines sho
                     "c-uri": "evt.Parsed.uri",
                 })
             ),
-            # ProcessingItem(
-            #     identifier="crowdsec_rule_not_supported",
-            #     rule_condition_linking=any,
-            #     transformation=RuleFailureTransformation("Rule type not yet supported by crowdsec backend!"),
-            #     rule_condition_negation=True,
-            #     rule_conditions=[
-            #         RuleProcessingItemAppliedCondition("crowdsec_webserver_fieldmapping"),
-            #         RuleProcessingItemAppliedCondition("crowdsec_windows_fieldmapping")
-            #     ],
-            # ),
+            ProcessingItem(     # This is an example for processing items generated from the mapping above.
+                #fields:
+                # a1-a7
+                # PATH (?)
+
+
+                identifier="crowdsec_linux_execve_fieldmapping",
+                rule_conditions=[LogsourceCondition(service="auditd",product="linux",)],
+                transformation=FieldMappingTransformation({
+                    # generic auditd fields
+                    "auid": "evt.Meta.auid",
+                    "comm": "evt.Meta.comm",
+                    "euid": "evt.Meta.euid",
+                    "exe": "evt.Meta.exe",
+                    "GID" : "evt.Meta.str_GID",
+                    "gid": "evt.Meta.gid",
+                    "pid": "evt.Meta.pid",
+                    "ppid": "evt.Meta.ppid",
+                    "res": "evt.Meta.res",
+                    "ses": "evt.Meta.ses",
+                    "sig": "evt.Meta.sig",
+                    "subj": "evt.Meta.subj",
+                    "tty": "evt.Meta.tty",
+                    "type": "evt.Meta.auditd_type",
+                    "UID" : "evt.Meta.str_UID",
+                    "uid": "evt.Meta.uid",
+                    #EXECVE related fields
+                    "a1": "evt.Parsed.a1",
+                    "a2": "evt.Parsed.a2",
+                    "a3": "evt.Parsed.a3",
+                    "a4": "evt.Parsed.a4",
+                    "a5": "evt.Parsed.a5",
+                    "a6": "evt.Parsed.a6",
+                    "a7": "evt.Parsed.a7",
+                    "a8": "evt.Parsed.a8",
+                    "a9": "evt.Parsed.a9",
+                    "a10": "evt.Parsed.a10",
+                    #PATH related fields
+                    "cap_fe": "evt.Meta.cap_fe",
+                    "cap_fi": "evt.Meta.cap_fi",
+                    "cap_fp": "evt.Meta.cap_fp",
+                    "cap_frootid": "evt.Meta.cap_frootid",
+                    "cap_fver": "evt.Meta.cap_fver",
+                    "dev": "evt.Meta.dev",
+                    "inode": "evt.Meta.inode",
+                    "item": "evt.Meta.item",
+                    "mode": "evt.Meta.mode",
+                    "name": "evt.Meta.name",
+                    "nametype": "evt.Meta.nametype",
+                    "obj": "evt.Meta.obj",
+                    "objtype": "evt.Meta.objtype",
+                    "ogid": "evt.Meta.ogid",
+                    "ouid": "evt.Meta.ouid",
+                    "rdev": "evt.Meta.rdev",
+                    #SERVICE_STOP related fields
+                    #N/A
+
+                })
+            ),
         ],
     )
