@@ -1,6 +1,6 @@
 """Crowdsec backend for Sigma rules."""
 # pylint: disable=line-too-long
-
+import sys
 from typing import Pattern, Union, ClassVar, Tuple, List, Dict, Any
 import warnings
 import re
@@ -249,8 +249,8 @@ labels:
 """
         else:
             warnings.warn("Unknown rule type, aborting")
-            exit(1)
-        
+            sys.exit(1)
+
         if rule.description:
             formatted_desc = rule.description.replace("\n", " ")
         else:
